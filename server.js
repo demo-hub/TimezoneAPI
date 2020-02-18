@@ -1,6 +1,7 @@
 require('dotenv').config()
 
 var express = require('express'),
+    createError = require('http-errors'),
     app = express(),
     port = process.env.PORT || 3000,
     mongoose = require('mongoose'),
@@ -20,16 +21,24 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 
-var routes = require('./api/routes/routes'); //importing route
-routes(app); //register the route
+router = require('./api/routes/index')
+
+
+//var routes = require('./api/routes/routes'); //importing route
+//routes(app); //register the route
 
 // swagger documentation
-var swaggerUi = require('swagger-ui-express'),
-    swaggerDocument = require('./swagger.json');
+// var swaggerUi = require('swagger-ui-express'),
+//    swaggerDocument = require('./swagger.json');
 
-app.use('/', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+//app.use('/api/v1', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+app.use('/api/v1', router)
 
 app.listen(port);
+
+app.use(function (req, res, next) {
+    next(createError(404));
+});
 
 app.use(function(req, res) {
     res.status(404).send({ url: req.originalUrl + ' not found' })
