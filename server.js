@@ -1,3 +1,5 @@
+require('dotenv').config()
+
 var express = require('express'),
     app = express(),
     port = process.env.PORT || 3000,
@@ -7,23 +9,12 @@ var express = require('express'),
 bodyParser = require('body-parser');
 // mongoose instance connection url connection
 mongoose.Promise = global.Promise;
-mongoose.connect('mongodb://localhost/timezonedb', { useNewUrlParser: true });
+mongoose.connect(process.env.CONNECTION_STRING, { useNewUrlParser: true });
+// mongoose.connect('mongodb+srv://heroku:8FbaUkX1AAFXLf7u@cluster0-ietwu.mongodb.net/timezonedb', { useNewUrlParser: true });
 
-const timezoneList = [
-    { code: 'UTC' },
-    { code: 'UTC+1' }
-]
+const dbBootstrap = require('./api/dbBootstrap')
 
-if (Timezone.length < timezoneList.length) { // if db already has the timezones we don't need to insert
-    Timezone.collection.insertMany(timezoneList, function(err, timezones) {
-        if (err) {
-            console.log('error')
-        } else {
-            console.log('%d timezones were successfully stored', timezones.length)
-        }
-    })
-}
-
+dbBootstrap();
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
@@ -32,6 +23,11 @@ app.use(bodyParser.json());
 var routes = require('./api/routes/routes'); //importing route
 routes(app); //register the route
 
+// swagger documentation
+var swaggerUi = require('swagger-ui-express'),
+    swaggerDocument = require('./swagger.json');
+
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.listen(port);
 

@@ -1,0 +1,119 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "version": "1.0.0",
+        "title": "Timezone API",
+        "description": "A simple API to get the timezone of a city and/or the cities in a specific timezone. Currently only supports UTC timezones."
+    },
+    "schemes": [
+        "http"
+    ],
+    "host": "https://geotime-api.herokuapp.com/",
+    "basePath": "",
+    "tags": [{
+            "name": "timezone",
+            "description": "Where you can see all the timezones supported"
+        },
+        {
+            "name": "city",
+            "description": "Where you can see all the timezones supported"
+        }
+    ],
+    "paths": {
+        "/timezones": {
+            "get": {
+                "tags": ["timezone"],
+                "summary": "Gets list of timezones supported",
+                "description": "Returns a list of all the timezones supported.",
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/Timezone"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/cities": {
+            "get": {
+                "tags": ["city"],
+                "summary": "Gets list of cities available",
+                "description": "Returns a list of all the cities available.",
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/City"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/cities/{cityId}": {
+            "get": {
+                "tags": ["city"],
+                "summary": "Gets a city by their id",
+                "description": "Returns the city with the id specified",
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/City"
+                        }
+                    }
+                }
+            }
+        },
+        "/cities/timezone/{timezoneCode}": {
+            "get": {
+                "tags": ["city"],
+                "summary": "Gets a list of cities by timezone",
+                "description": "Returns the list of cities in that timezone",
+                "parameters": [{
+                    "name": "timezoneCode",
+                    "in": "query",
+                    "description": "Timezone code from which to get the cities",
+                    "required": "true",
+                    "type": "string"
+                }],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/City"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "City": {
+            "type": "object",
+            "properties": {
+                "_id": { "type": "Schema.Types.ObjectId" },
+                "name": { "type": "string" },
+                "timezone": { "type": "Schema.Types.ObjectId" },
+                "created_date": { "type": "string", "format": "date-time" }
+            }
+        },
+        "Timezone": {
+            "type": "object",
+            "properties": {
+                "_id": { "type": "Schema.Types.ObjectId" },
+                "code": { "type": "string" },
+                "created_date": { "type": "string", "format": "date-time" }
+            }
+        }
+    }
+}

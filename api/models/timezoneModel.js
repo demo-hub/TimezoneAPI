@@ -10,7 +10,7 @@ var TimezoneSchema = new Schema({
         required: 'Enter the timezone code',
         unique: true
     },
-    Created_date: {
+    created_date: {
         type: Date,
         default: Date.now
     }

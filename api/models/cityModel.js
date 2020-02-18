@@ -14,7 +14,7 @@ var CitySchema = new Schema({
         ref: 'Timezone',
         required: 'Enter the city timezone'
     },
-    Created_date: {
+    created_date: {
         type: Date,
         default: Date.now
     }
