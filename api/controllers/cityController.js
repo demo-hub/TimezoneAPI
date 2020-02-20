@@ -21,15 +21,18 @@ exports.read_a_city = function(req, res) {
     });
 };
 
-exports.get_cities_by_timezone = function(req, res) {
-    let timezone;
-    Timezone.find({ code: decodeURIComponent(req.params.timezoneCode) }, function(err, timezones) {
-        if (err)
-            res.send(err);
-        timezone = timezones[0]
-    });
+exports.get_cities_by_timezone = async function(req, res) {
+    let timezone
 
-    City.find({ timezone: timezone._id }, function(err, cities) {
+    try {
+
+        timezone = await Timezone.find({ code: decodeURIComponent(req.params.timezoneCode) })
+           
+    } catch(err){
+        res.send(err)
+    }
+
+    City.find({ timezone: timezone[0]._id }, function(err, cities) {
         if (err)
             res.send(err);
         res.json(cities);
