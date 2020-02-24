@@ -1,7 +1,7 @@
 mongoose = require('mongoose')
 Timezone = mongoose.model('Timezone');
 City = mongoose.model('City');
-
+Country = mongoose.model('Country');
 module.exports = async function dbBootstrap() {
     const timezoneList = [
         { code: 'UTC' },
@@ -50,6 +50,50 @@ module.exports = async function dbBootstrap() {
             const timezonesInserted = await Timezone.collection.insertMany(timezoneList);
 
             console.log('%d timezones were successfully stored', timezonesInserted.result.n)
+        } catch (err) {
+            console.log(err)
+        }
+
+    }
+
+    const countriesList = [
+        { name: 'France', code: 'fr', timezone: [timezones[24]._id, timezones[23]._id, timezones[22]._id, timezones[18]._id, timezones[17]._id, timezones[1]._id, timezones[3]._id, timezones[4]._id, timezones[5]._id, timezones[11]._id, timezones[12]._id] },
+        { name: 'Russia', code: 'ru', timezone: [timezones[2]._id, timezones[3]._id, timezones[4]._id, timezones[5]._id, timezones[6]._id, timezones[7]._id, timezones[8]._id, timezones[9]._id, timezones[10]._id, timezones[11]._id, timezones[12]._id] },
+        { name: 'United States', code: 'us', timezone: [timezones[26]._id, timezones[25]._id, timezones[24]._id, timezones[23]._id, timezones[22]._id, timezones[21]._id, timezones[20]._id, timezones[19]._id, timezones[18]._id, timezones[10]._id, timezones[12]._id] },
+        {
+            name: 'Antarctica',
+            code: 'an',
+            timezone: [timezones[17]._id, timezones[0]._id, timezones[3]._id, timezones[5]._id, timezones[6]._id, timezones[7]._id, timezones[10]._id, timezones[11]._id, timezones[12]._id]
+        },
+        {
+            name: 'Australia',
+            code: 'au',
+            timezone: [timezones[5]._id, timezones[7]._id, timezones[8]._id, timezones[10]._id, timezones[11]._id]
+        },
+        {
+            name: 'United Kingdom',
+            code: 'uk',
+            timezone: [timezones[22]._id, timezones[19]._id, timezones[18]._id, timezones[17]._id, timezones[16]._id, timezones[0]._id, timezones[1]._id, timezones[2]._id, timezones[6]._id]
+        },
+    ]
+
+    let countries;
+
+    try {
+        countries = await Country.find({})
+    } catch (err) {
+        console.log('Could not get countries', err)
+    }
+
+    if (countries.length < countriesList.length) { // if db already has the countries we don't need to insert
+        try {
+            await Country.deleteMany({})
+
+            console.log('Countries successfully deleted')
+
+            const cdountriesInserted = await Country.collection.insertMany(countriesList);
+
+            console.log('%d countries were successfully stored', countriesInserted.result.n)
         } catch (err) {
             console.log(err)
         }

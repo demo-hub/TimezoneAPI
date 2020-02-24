@@ -14,6 +14,11 @@ var CitySchema = new Schema({
         ref: 'Timezone',
         required: 'Enter the city timezone'
     },
+    country: {
+        type: Schema.Types.ObjectId,
+        ref: 'Country',
+        required: 'Enter the city timezone'
+    },
     created_date: {
         type: Date,
         default: Date.now

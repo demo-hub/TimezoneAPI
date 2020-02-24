@@ -4,14 +4,14 @@ var express = require('express'),
     createError = require('http-errors'),
     app = express(),
     port = process.env.PORT || 3000,
-    mongoose = require('mongoose'),
-    Timezone = require('./api/models/timezoneModel'), // always create the Timezone first because City has a reference to Timezone
-    City = require('./api/models/cityModel')
+    mongoose = require('mongoose')
+Timezone = require('./api/models/timezoneModel'),
+    City = require('./api/models/cityModel'),
+    Country = require('./api/models/countryModel')
 bodyParser = require('body-parser');
 // mongoose instance connection url connection
 mongoose.Promise = global.Promise;
 mongoose.connect(process.env.CONNECTION_STRING, { useNewUrlParser: true });
-// mongoose.connect('mongodb+srv://heroku:8FbaUkX1AAFXLf7u@cluster0-ietwu.mongodb.net/timezonedb', { useNewUrlParser: true });
 
 const dbBootstrap = require('./api/dbBootstrap')
 
@@ -23,20 +23,11 @@ app.use(bodyParser.json());
 
 router = require('./api/routes/index')
 
-
-//var routes = require('./api/routes/routes'); //importing route
-//routes(app); //register the route
-
-// swagger documentation
-// var swaggerUi = require('swagger-ui-express'),
-//    swaggerDocument = require('./swagger.json');
-
-//app.use('/api/v1', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 app.use('/api/v1', router)
 
 app.listen(port);
 
-app.use(function (req, res, next) {
+app.use(function(req, res, next) {
     next(createError(404));
 });
 

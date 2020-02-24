@@ -27,8 +27,8 @@ exports.get_cities_by_timezone = async function(req, res) {
     try {
 
         timezone = await Timezone.find({ code: decodeURIComponent(req.params.timezoneCode) })
-           
-    } catch(err){
+
+    } catch (err) {
         res.send(err)
     }
 
